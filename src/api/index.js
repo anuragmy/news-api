@@ -1,15 +1,7 @@
 import axios from "axios";
 
-// const api = "pub_27310baae2fb6a92e39ab23dc84027221ab1";
-const api = "560260f27371488ea08926319cb8480f";
+const api = process.env.REACT_APP_API_KEY;
 axios.defaults.headers.post["X-Api-Key"] = api;
-
-//const url = "https://newsapi.org/v2";
-//const url = `https://newsdata.io/api/1/news?apiKey=${api}&country=in`;
-// const newsUrl =
-//   "https://newsdata.io/api/1/news?apikey=pub_27310baae2fb6a92e39ab23dc84027221ab1&country=in";
-
-//newsdata.io/api/1/news?apikey=pub_27310baae2fb6a92e39ab23dc84027221ab1
 
 export const fetchSources = async () => {
   const url = `https://newsapi.org/v2/top-headlines/sources?apiKey=${api}`;

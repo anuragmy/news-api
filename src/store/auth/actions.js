@@ -5,9 +5,11 @@ export const isAuth = (data) => ({
   payload: data,
 });
 
-export const logout = () => ({
-  type: actionTypes.LOGOUT,
-});
+export const logout = () => {
+  return {
+    type: actionTypes.LOGOUT,
+  };
+};
 
 export const setTheme = (data) => ({
   type: actionTypes.THEME,

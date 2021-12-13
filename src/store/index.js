@@ -5,6 +5,7 @@ import storage from "redux-persist/lib/storage";
 
 import Logger from "redux-logger";
 import AuthReducer from "./auth/reducer";
+import NewsReducer from "./news/reducer";
 
 const persistConfig = {
   key: "root",
@@ -13,6 +14,7 @@ const persistConfig = {
 
 const reducers = combineReducers({
   auth: AuthReducer,
+  news: NewsReducer,
 });
 
 const middlewares = [Logger];

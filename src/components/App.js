@@ -9,6 +9,7 @@ import { categories, themes } from "../constants";
 import { Container, Grid } from "@material-ui/core";
 import Login from "./Login";
 import { logout, setTheme } from "../store/auth/actions";
+import { clearData, setAllNews } from "../store/news/actions";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -18,10 +19,14 @@ const NewsSection = React.lazy(() => import("./NewsSection"));
 const App = () => {
   const dispatch = useDispatch();
   const token = useSelector(({ auth }) => auth.token);
+  const bookmarkedNews = useSelector(({ news }) => news.bookmarkNews);
+  const allNews = useSelector(({ news }) => news.all);
   const theme = useSelector(({ auth }) => auth.theme);
   const name = useSelector(({ auth }) => auth.name);
   const pic = useSelector(({ auth }) => auth.profile);
+
   const [currentPage, setCurrentPage] = useState(1);
+  const [bookmarkClicked, isBookmarkClicked] = useState(false);
   const [postPerPage, setPostPerPage] = useState(10);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(false);
@@ -45,12 +50,18 @@ const App = () => {
     }
   };
 
-  useEffect(() => {
-    const getTopNews = async () => {
-      const result = await fetchNews();
-      setNews(result?.data?.articles);
-    };
+  const getTopNews = async () => {
+    const result = await fetchNews();
+    if (result?.data?.articles) {
+      const updatedNews = result?.data?.articles.map((item) => ({
+        ...item,
+        bookmark: false,
+      }));
+      dispatch(setAllNews(updatedNews));
+    }
+  };
 
+  useEffect(() => {
     getTopNews();
   }, []);
 
@@ -88,6 +99,14 @@ const App = () => {
       <Menu>
         <Menu.Item
           onClick={() => {
+            isBookmarkClicked(!bookmarkClicked);
+          }}
+        >
+          {bookmarkClicked ? "All news" : "Bookmarked News"}
+        </Menu.Item>
+        <Menu.Item
+          onClick={() => {
+            dispatch(clearData());
             dispatch(logout());
           }}
         >
@@ -204,7 +223,11 @@ const App = () => {
                 }}
               />
             ) : (
-              <NewsSection news={news} isData={isData} theme={theme} />
+              <NewsSection
+                news={bookmarkClicked ? bookmarkedNews : allNews}
+                isData={isData}
+                theme={theme}
+              />
             )}
           </Suspense>
         </Container>

@@ -13,7 +13,6 @@ const Login = () => {
       .auth()
       .signInWithPopup(provider)
       .then((res) => {
-        console.log(res);
         dispatch(
           isAuth({
             token: res.credential.accessToken,

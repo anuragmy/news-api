@@ -1,22 +1,29 @@
 /* eslint-disable */
 import React, { useEffect, useState } from "react";
 import { Row, Col, Divider, Card, Spin, Empty } from "antd";
+import { useDispatch } from "react-redux";
 import { Grid, Container } from "@material-ui/core";
 import Bookmark from "../assets/bookmark.png";
 import Bookmarked from "../assets/bookmarked.png";
 import ReactHtmlParser from "react-html-parser";
 import { themes } from "../constants";
 import { Helmet } from "react-helmet";
+import { addBookmark } from "../store/news/actions";
 const { Meta } = Card;
 
 const NewsSection = ({ news, isData, theme }) => {
+  const dispatch = useDispatch();
   const [data, setData] = useState([]);
 
+  const handleChangeBookMark = (article, index) => {
+    const vals = data;
+    vals[index].bookmark = !vals[index].bookmark;
+    setData(vals);
+    dispatch(addBookmark(article));
+  };
+
   useEffect(() => {
-    if (news.length) {
-      const modifiedNews = news.map((news) => ({ ...news, bookmark: false }));
-      setData(modifiedNews);
-    }
+    setData(news);
   }, [news]);
 
   return (
@@ -60,15 +67,10 @@ const NewsSection = ({ news, isData, theme }) => {
                         }
                         extra={
                           <div
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              const vals = data;
-                              vals[key].bookmark = !vals[key].bookmark;
-                              setData(vals);
-                            }}
+                            onClick={() => handleChangeBookMark(article, key)}
                           >
                             <img
-                              src={!article.bookmark ? Bookmarked : Bookmark}
+                              src={article.bookmark ? Bookmark : Bookmarked}
                               height={18}
                             />
                           </div>
