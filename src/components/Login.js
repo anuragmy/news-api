@@ -35,6 +35,10 @@ const Login = () => {
         left: "50%",
         top: "50%",
         transform: "translate(-50%,-50%) ",
+        width: "100%",
+        height: "100%",
+        background:
+          "linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,108,121,1) 41%, rgba(0,212,255,1) 100%)",
       }}
     >
       <img

@@ -10,12 +10,13 @@ export const categories = [
 ];
 
 export const googleNewsLink =
-  "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.FomZT7IBFhkzjDV2iofmIwAAAA%26pid%3DApi&f=1";
+  "http://icons.iconarchive.com/icons/carlosjj/google-jfk/128/news-icon.png";
 
 export const themes = {
   dark: "#0A1929",
   dark1: "#173A5E",
-  light: "white",
+  lightAppBar: "white",
+  light: "linear-gradient(135deg, #8BC6EC 0%, #9599E2 100%)",
   darkCard: "#051E3C",
   lightCard: "white",
 };

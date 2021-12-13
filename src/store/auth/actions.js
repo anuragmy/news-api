@@ -8,3 +8,8 @@ export const isAuth = (data) => ({
 export const logout = () => ({
   type: actionTypes.LOGOUT,
 });
+
+export const setTheme = (data) => ({
+  type: actionTypes.THEME,
+  payload: data,
+});

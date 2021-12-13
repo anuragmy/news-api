@@ -32,6 +32,8 @@ export const AuthReducer = (state = initialState, action) => {
         token: "",
         isLoggedIn: false,
         theme: themes.light,
+        name: "",
+        profile: "",
       };
     }
     default: {

@@ -8,7 +8,7 @@ import { fetchNews, fetchNewsWithQuery } from "../api";
 import { categories, themes } from "../constants";
 import { Container, Grid } from "@material-ui/core";
 import Login from "./Login";
-import { logout } from "../store/auth/actions";
+import { logout, setTheme } from "../store/auth/actions";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -18,6 +18,7 @@ const NewsSection = React.lazy(() => import("./NewsSection"));
 const App = () => {
   const dispatch = useDispatch();
   const token = useSelector(({ auth }) => auth.token);
+  const theme = useSelector(({ auth }) => auth.theme);
   const name = useSelector(({ auth }) => auth.name);
   const pic = useSelector(({ auth }) => auth.profile);
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,7 +28,6 @@ const App = () => {
   const [news, setNews] = useState([]);
   const [category, setCategory] = useState("");
   const [isData, setIsData] = useState(true);
-  const [theme, setTheme] = useState(localStorage.getItem("theme"));
   const [color, setColor] = useState(themes.light);
 
   const handleChangeCategory = (val) => setCategory(val);
@@ -76,17 +76,12 @@ const App = () => {
 
   const handleSearch = (e) => setQuery(e.target.value);
   const handleChangeTheme = (val) => {
-    setTheme(val);
-    localStorage.setItem("theme", val);
+    dispatch(setTheme(val));
   };
 
   useEffect(() => {
     setColor(!theme ? themes.dark : themes.light);
   }, [theme]);
-
-  useEffect(() => {
-    setTheme(localStorage.getItem("theme"));
-  }, []);
 
   const showProfileItems = () => {
     return (
@@ -110,7 +105,7 @@ const App = () => {
             bordered={false}
             style={{
               width: "auto",
-              background: !theme ? themes.dark1 : themes.light,
+              background: !theme ? themes.dark1 : themes.lightAppBar,
             }}
           >
             <Grid
@@ -168,7 +163,7 @@ const App = () => {
                 <Switch
                   checkedChildren="Light"
                   unCheckedChildren="Dark"
-                  defaultChecked
+                  checked={theme}
                   style={{ marginRight: 10 }}
                   onChange={handleChangeTheme}
                 />
