@@ -1,112 +1,217 @@
 /* eslint-disable */
 import React, { Suspense, useEffect, useState } from "react";
-import "antd/dist/antd.css";
 import "./Layout.css";
-import { Input, Layout, Menu, Spin, Switch } from "antd";
 import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  StockOutlined,
-  CheckCircleOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
-import { fetchSources } from "../api";
+  Input,
+  Layout,
+  Spin,
+  Switch,
+  Avatar,
+  Select,
+  Card,
+  Menu,
+  Popover,
+  Button,
+} from "antd";
+import { UserOutlined } from "@ant-design/icons";
+import {
+  fetchNews,
+  fetchNewsWithCategorAndSource,
+  fetchNewsWithQuery,
+  fetchNewsWithQueryAndSource,
+  fetchSources,
+} from "../api";
+import { categories, newsData, newsSources } from "../constants";
+import { Container, Grid } from "@material-ui/core";
+import { auth, provider } from "../config";
 
 const { Search } = Input;
+const { Option } = Select;
 
 const NewsSection = React.lazy(() => import("./NewsSection"));
-const News = React.lazy(() => import("./News"));
-
-const { Header, Sider, Content } = Layout;
 
 const MainLayout = () => {
-  const [collapsed, setCollapsed] = useState(false);
-  const [sources, setSources] = useState([]);
-  const [homePage, setHomePage] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postPerPage, setPostPerPage] = useState(10);
   const [query, setQuery] = useState("");
+  const [homePage, setHomePage] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [news, setNews] = useState([]);
+  const [category, setCategory] = useState("");
+  const [source, setSource] = useState("");
+  const [isData, setIsData] = useState(true);
 
-  const toggle = () => {
-    setCollapsed(!collapsed);
+  const handleChangeCategory = (val) => setCategory(val);
+  const handleChangeSource = (val) => setSource(val);
+  const firebaseSignIn = () => {
+    //auth.signInWithPopup(provider).then();
+  };
+
+  const handleSubmit = async () => {
+    if (query.length) {
+      const source = await fetchNewsWithQuery(query);
+      if (source) {
+        setNews(source?.data?.articles);
+      } else {
+        setLoading(false);
+        setIsData(false);
+      }
+    }
   };
 
   useEffect(() => {
     const getSources = async () => {
-      const sources = await fetchSources();
-      if (sources) setSources(sources);
+      const source = await fetchSources();
+      console.log("sources", source);
+      setSources(source?.data?.sources);
     };
-    getSources();
+    const getTopNews = async () => {
+      const result = await fetchNews();
+      setNews(result?.data?.articles);
+    };
+    //getSources();
+    // getTopNews();
+    setNews(newsData[0]);
+    //setSources(newsSources[0]);
   }, []);
+
+  useEffect(() => {
+    if (category.length) {
+      setLoading(true);
+      setIsData(false);
+      const getNews = async () => {
+        const res = await fetchNewsWithQuery(category);
+        if (res?.data?.articles) {
+          setNews(res?.data?.articles);
+        } else setIsData(false);
+        setLoading(false);
+      };
+      getNews();
+    }
+  }, [category]);
 
   const loadNews = (query) => {
     setHomePage(false);
-    setQuery(query);
   };
 
-  const handleChangeSearch = (e) => console.log(e.target.value);
-  const handleSearch = (e) => console.log(e.target.value);
+  const indexOfLastPost = currentPage * postPerPage;
+  const indexOfFirstPost = indexOfLastPost * postPerPage;
+  //const currentPosts = news.slice(indexOfFirstPost, indexOfLastPost);
+
+  const handleSearch = (e) => setQuery(e.target.value);
+
+  const showProfileItems = () => {
+    return (
+      <Menu>
+        <Menu.Item>Logout</Menu.Item>
+      </Menu>
+    );
+  };
 
   return (
-    <Layout>
-      {/* <Sider trigger={null} collapsible collapsed={!collapsed}>
-        <div className="logo">
-          <h2>{!collapsed ? "N" : "Newsio"}</h2>
-        </div>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={["-1"]}>
-          <Menu.Item
-            onClick={() => setHomePage(true)}
-            key="-1"
-            icon={<StockOutlined />}
-          >
-            Top News
-          </Menu.Item>
-          {sources.map((source) => (
-            <Menu.Item onClick={() => loadNews(source.name)} key={source.name}>
-              {source.name}
-            </Menu.Item>
-          ))}
-        </Menu>
-      </Sider> */}
-      <Layout className="site-layout">
-        <Header className="site-layout-background">
-          <Search
-            placeholder="Search News..."
-            //onSearch={handleSearch}
-            enterButton
-            onChange={handleSearch}
-            style={{ marginTop: 15, width: 400 }}
-          />
-          <Switch
-            checkedChildren="Light"
-            unCheckedChildren="Dark"
-            defaultChecked
-            style={{ marginLeft: "60%" }}
-          />
-        </Header>
-
-        <Content
-          className="site-layout-background"
-          style={{
-            margin: "24px 16px",
-            padding: 24,
-            paddingRight: 0,
-            minHeight: 280,
-          }}
+    <Container>
+      <Card bordered={false} style={{ width: "auto" }}>
+        <Grid
+          container
+          spacing={2}
+          style={{ display: "flex", justifyContent: "space-between" }}
         >
-          <Suspense fallback={<Spin size="large" />}>
-            {homePage === true ? (
-              <News />
-            ) : (
-              <NewsSection
-                category="everything"
-                query={"q=" + query}
-                topHeading={query}
-                results="100"
+          <Grid item xs={12} sm={3}>
+            <Search
+              placeholder="Search News..."
+              enterButton
+              onSearch={handleSubmit}
+              onChange={handleSearch}
+            />
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            sm={3}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Select
+              style={{
+                width: 200,
+              }}
+              showSearch
+              placeholder="Select Category"
+              onChange={handleChangeCategory}
+            >
+              {categories.map((source) => (
+                <Option
+                  // onClick={() => loadNews(source.name)}
+                  key={source}
+                  value={source}
+                >
+                  {source}
+                </Option>
+              ))}
+            </Select>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            sm={3}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Switch
+              checkedChildren="Light"
+              unCheckedChildren="Dark"
+              defaultChecked
+              style={{ marginRight: 10 }}
+            />
+            {/* <Button type="primary" onClick={firebaseSignIn}>
+              Sign in
+            </Button> */}
+
+            <Popover content={showProfileItems} title="Profile">
+              <Avatar
+                size={34}
+                icon={<UserOutlined />}
+                style={{ cursor: "pointer" }}
               />
-            )}
-          </Suspense>
-        </Content>
-      </Layout>
-    </Layout>
+            </Popover>
+          </Grid>
+        </Grid>
+      </Card>
+
+      <Suspense
+        fallback={
+          <Spin
+            size="large"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 30,
+            }}
+          />
+        }
+      >
+        {loading ? (
+          <Spin
+            size="large"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginTop: 30,
+            }}
+          />
+        ) : (
+          <NewsSection news={news} isData={isData} />
+        )}
+      </Suspense>
+    </Container>
   );
 };
 
