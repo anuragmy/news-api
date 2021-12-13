@@ -1,6 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import MainLayout from "./components/Layout";
-import "antd/dist/antd.css";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 
-ReactDOM.render(<MainLayout />, document.getElementById("root"));
+import "antd/dist/antd.css";
+import App from "./components/App";
+import { persistor, store } from "./store";
+
+ReactDOM.render(
+  <Provider store={store}>
+    <PersistGate persistor={persistor}>
+      <App />
+    </PersistGate>
+  </Provider>,
+  document.getElementById("root")
+);

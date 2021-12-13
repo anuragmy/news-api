@@ -9,6 +9,17 @@ export const categories = [
   "technology",
 ];
 
+export const googleNewsLink =
+  "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse3.mm.bing.net%2Fth%3Fid%3DOIP.FomZT7IBFhkzjDV2iofmIwAAAA%26pid%3DApi&f=1";
+
+export const themes = {
+  dark: "#0A1929",
+  dark1: "#173A5E",
+  light: "white",
+  darkCard: "#051E3C",
+  lightCard: "white",
+};
+
 export const newsData = [
   [
     {
