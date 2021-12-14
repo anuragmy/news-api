@@ -9,7 +9,7 @@ export const NewsReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.BOOKMARK: {
       const isPresent = state.bookmarkNews.find(
-        (item) => item.title === action.payload.title
+        (item) => item.id === action.payload.id
       );
 
       return {
@@ -21,7 +21,7 @@ export const NewsReducer = (state = initialState, action) => {
             ),
         all: !isPresent
           ? state.all.filter((item) => item.title !== action.payload.title)
-          : [action.payload, ...state.all],
+          : [{ ...action.payload, bookmark: false }, ...state.all],
       };
     }
     case actionTypes.ALLNEWS: {

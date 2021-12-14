@@ -41,7 +41,7 @@ const App = () => {
     if (query.length) {
       const source = await fetchNewsWithQuery(query);
       if (source) {
-        setNews(source?.data?.articles);
+        dispatch(setAllNews(source?.data?.articles));
         setIsData(true);
       } else {
         setIsData(false);
@@ -53,8 +53,9 @@ const App = () => {
   const getTopNews = async () => {
     const result = await fetchNews();
     if (result?.data?.articles) {
-      const updatedNews = result?.data?.articles.map((item) => ({
+      const updatedNews = result?.data?.articles.map((item, i) => ({
         ...item,
+        id: i,
         bookmark: false,
       }));
       dispatch(setAllNews(updatedNews));
@@ -72,7 +73,7 @@ const App = () => {
       const getNews = async () => {
         const res = await fetchNewsWithQuery(category);
         if (res?.data?.articles) {
-          setNews(res?.data?.articles);
+          dispatch(setAllNews(res?.data?.articles));
           setIsData(true);
         } else setIsData(false);
         setLoading(false);
