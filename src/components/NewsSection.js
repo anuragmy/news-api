@@ -83,6 +83,7 @@ const NewsSection = ({ news, isData, theme }) => {
                           style={{
                             color: theme ? "black" : "white",
                           }}
+                          onClick={() => window.open(article.url, "_blank")}
                         >
                           {ReactHtmlParser(article.title)}
                         </h3>
