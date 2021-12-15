@@ -8,6 +8,11 @@ A news application built using ReactJS (Reusable Components) and [NewsAPI](https
 2. cd news-api 
 3. npm start
 
+# prerequisits
+
+1. add newsapi api key in env file under variable REACT_APP_API_KEY
+2. fill other api fields with firebase project details
+
 # features
 
 1. get news on page load
