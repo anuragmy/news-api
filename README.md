@@ -12,7 +12,8 @@ for linux (ubuntu/debian) : sudo apt install nodejs
 
 1. clone project (git clone https://github.com/anuragmy/news-api)
 2. cd news-api 
-3. npm start
+3. npm install
+4. npm start
 
 # prerequisits
  
