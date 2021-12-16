@@ -7,6 +7,7 @@ A news application built using ReactJS (Reusable Components) and [NewsAPI](https
 make sure you have node env installed in your system
 
 for windows: https://nodejs.org/en/
+
 for linux (ubuntu/debian) : sudo apt install nodejs
 
 1. clone project (git clone https://github.com/anuragmy/news-api)
