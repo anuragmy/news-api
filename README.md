@@ -22,7 +22,7 @@ for linux (ubuntu/debian) : sudo apt install nodejs
 
 for reference, you may go through this video
 
-https://www.youtube.com/watch?v=wUhcIVJml1w&t=530s
+https://www.youtube.com/watch?v=wUhcIVJml1w
 
 # features
 
