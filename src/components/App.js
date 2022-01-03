@@ -10,6 +10,7 @@ import { Container, Grid } from "@material-ui/core";
 import Login from "./Login";
 import { logout, setTheme } from "../store/auth/actions";
 import { clearData, setAllNews } from "../store/news/actions";
+import Axios from "axios";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -62,8 +63,17 @@ const App = () => {
     }
   };
 
+  const checkNews = async () => {
+    const result = await Axios.get(
+      "https://api.thenewsapi.com/v1/news/top?api_token=hq4dvaXLDsCit6VhPyfVS82hiLBF1cT8u18jmxhe"
+    );
+
+    console.log(result);
+  };
+
   useEffect(() => {
     getTopNews();
+    checkNews();
   }, []);
 
   useEffect(() => {
