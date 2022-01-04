@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const api = process.env.REACT_APP_API_KEY;
+const api = process.env.REACT_APP_API_TOKEN;
 axios.defaults.headers.post["X-Api-Key"] = api;
 
 export const fetchSources = async () => {
@@ -24,7 +24,8 @@ export const fetchNews = async () => {
 };
 
 export const fetchNewsWithQuery = async (query) => {
-  const url = `https://newsapi.org/v2/everything?q=${query}&apiKey=${api}`;
+  // const url = `https://newsapi.org/v2/everything?q=${query}&apiKey=${api}`;
+  const url = `https://api.thenewsapi.com/v1/news/all?language=en&search=${query}&api_token=${api}`;
   try {
     const data = await axios.get(url);
     return data;

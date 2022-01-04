@@ -42,7 +42,7 @@ const App = () => {
     if (query.length) {
       const source = await fetchNewsWithQuery(query);
       if (source) {
-        dispatch(setAllNews(source?.data?.articles));
+        dispatch(setAllNews(source?.data?.data));
         setIsData(true);
       } else {
         setIsData(false);
@@ -65,14 +65,21 @@ const App = () => {
 
   const checkNews = async () => {
     const result = await Axios.get(
-      "https://api.thenewsapi.com/v1/news/top?api_token=hq4dvaXLDsCit6VhPyfVS82hiLBF1cT8u18jmxhe"
+      `https://api.thenewsapi.com/v1/news/top?locale=us&language=en&api_token=${process.env.REACT_APP_API_TOKEN}`
     );
 
-    console.log(result);
+    if (result?.data?.data) {
+      const updatedNews = result?.data?.data.map((item, i) => ({
+        ...item,
+        id: i,
+        bookmark: false,
+      }));
+      dispatch(setAllNews(updatedNews));
+    }
   };
 
   useEffect(() => {
-    getTopNews();
+    //getTopNews();
     checkNews();
   }, []);
 
@@ -82,8 +89,8 @@ const App = () => {
       setIsData(false);
       const getNews = async () => {
         const res = await fetchNewsWithQuery(category);
-        if (res?.data?.articles) {
-          dispatch(setAllNews(res?.data?.articles));
+        if (res?.data?.data) {
+          dispatch(setAllNews(res?.data?.data));
           setIsData(true);
         } else setIsData(false);
         setLoading(false);

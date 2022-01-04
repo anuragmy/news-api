@@ -49,20 +49,19 @@ const NewsSection = ({ news, isData, theme }) => {
                         color: theme ? "black" : "white",
                       }}
                       cover={
-                        article.urlToImage === "" ||
-                        article.urlToImage === null ? null : (
+                        article.image_url === "" ||
+                        article.image_url === null ? null : (
                           <img
                             alt={article.title}
-                            src={article.urlToImage}
+                            src={article.image_url}
                             onClick={() => window.open(article.url, "_blank")}
                           />
                         )
                       }
                       title={
-                        article.source.name === "" ||
-                        article.source.name === null
+                        article.source === "" || article.source === null
                           ? null
-                          : "Source: " + ReactHtmlParser(article.source.name)
+                          : "Source: " + ReactHtmlParser(article.source)
                       }
                       extra={
                         <div onClick={() => handleChangeBookMark(article, key)}>
@@ -95,9 +94,14 @@ const NewsSection = ({ news, isData, theme }) => {
                           onClick={() => window.open(article.url, "_blank")}
                         />
                         <br />
-                        {article.author === "" || article.author === null
+                        {/* {article.author === "" || article.author === null
                           ? null
-                          : "Author: " + article.author}
+                          : "Author: " + article.author} */}
+                        {article.published_at === "" ||
+                        article.published_at === null
+                          ? null
+                          : "Date: " +
+                            new Date(article.published_at).toUTCString()}
                       </div>
                     </Card>
                   </Grid>
