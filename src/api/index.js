@@ -26,7 +26,9 @@ export const fetchNews = async () => {
 
 export const fetchNewsWithQuery = async (query) => {
   // const url = `https://newsapi.org/v2/everything?q=${query}&apiKey=${api}`;
-  const url = `https://api.thenewsapi.com/v1/news/all?language=en&search=${query}&api_token=${api}`;
+  // const url = `https://api.thenewsapi.com/v1/news/all?language=en&search=${query}&api_token=${api}`;
+  const url = `https://inshortsapi.vercel.app/news?category=${query}`;
+
   try {
     const data = await axios.get(url);
     return data;

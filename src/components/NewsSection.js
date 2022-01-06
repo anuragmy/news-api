@@ -49,19 +49,22 @@ const NewsSection = ({ news, isData, theme }) => {
                         color: theme ? "black" : "white",
                       }}
                       cover={
-                        article.image_url === "" ||
-                        article.image_url === null ? null : (
+                        article.imageUrl === "" ||
+                        article.imageUrl === null ? null : (
                           <img
                             alt={article.title}
-                            src={article.image_url}
+                            src={article.imageUrl}
+                            style={{
+                              maxHeight: 250,
+                            }}
                             onClick={() => window.open(article.url, "_blank")}
                           />
                         )
                       }
                       title={
-                        article.source === "" || article.source === null
+                        article.author === "" || article.author === null
                           ? null
-                          : "Source: " + ReactHtmlParser(article.source)
+                          : "Author: " + ReactHtmlParser(article.author)
                       }
                       extra={
                         <div onClick={() => handleChangeBookMark(article, key)}>
@@ -90,18 +93,20 @@ const NewsSection = ({ news, isData, theme }) => {
                           style={{
                             color: theme ? "black" : "white",
                           }}
-                          description={article.description}
-                          onClick={() => window.open(article.url, "_blank")}
+                          description={article.content}
+                          onClick={() =>
+                            window.open(article.readMoreUrl, "_blank")
+                          }
                         />
                         <br />
-                        {/* {article.author === "" || article.author === null
+                        {article.date === "" || article.date === null
                           ? null
-                          : "Author: " + article.author} */}
-                        {article.published_at === "" ||
+                          : "Date: " + article.date}
+                        {/* {article.published_at === "" ||
                         article.published_at === null
                           ? null
                           : "Date: " +
-                            new Date(article.published_at).toUTCString()}
+                            new Date(article.published_at).toUTCString()} */}
                       </div>
                     </Card>
                   </Grid>

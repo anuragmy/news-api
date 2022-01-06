@@ -51,31 +51,29 @@ const App = () => {
     }
   };
 
-  const getTopNews = async () => {
+  // const getTopNews = async () => {
+  //   const result = await fetchNews();
+  //   if (result?.data?.articles) {
+  //     const updatedNews = result?.data?.articles.map((item, i) => ({
+  //       ...item,
+  //       id: i,
+  //       bookmark: false,
+  //     }));
+  //     dispatch(setAllNews(updatedNews));
+  //   }
+  // };
+
+  const checkNews = async () => {
     const result = await fetchNews();
-    if (result?.data?.articles) {
-      const updatedNews = result?.data?.articles.map((item, i) => ({
+
+    if (result?.data) {
+      const updatedNews = result?.data?.data.map((item, i) => ({
         ...item,
         id: i,
         bookmark: false,
       }));
       dispatch(setAllNews(updatedNews));
     }
-  };
-
-  const checkNews = async () => {
-    const result = await fetchNews();
-
-    console.log("res", result?.data);
-
-    // if (result?.data?.data) {
-    //   const updatedNews = result?.data?.data.map((item, i) => ({
-    //     ...item,
-    //     id: i,
-    //     bookmark: false,
-    //   }));
-    //   dispatch(setAllNews(updatedNews));
-    // }
   };
 
   useEffect(() => {
