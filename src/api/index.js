@@ -14,7 +14,8 @@ export const fetchSources = async () => {
 };
 
 export const fetchNews = async () => {
-  const url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=${api}`;
+  // const url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=${api}`;
+  const url = "https://inshortsapi.vercel.app/news?category=all";
   try {
     const data = await axios.get(url);
     return data;

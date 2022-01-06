@@ -64,18 +64,18 @@ const App = () => {
   };
 
   const checkNews = async () => {
-    const result = await Axios.get(
-      `https://api.thenewsapi.com/v1/news/top?locale=us&language=en&api_token=${process.env.REACT_APP_API_TOKEN}`
-    );
+    const result = await fetchNews();
 
-    if (result?.data?.data) {
-      const updatedNews = result?.data?.data.map((item, i) => ({
-        ...item,
-        id: i,
-        bookmark: false,
-      }));
-      dispatch(setAllNews(updatedNews));
-    }
+    console.log("res", result?.data);
+
+    // if (result?.data?.data) {
+    //   const updatedNews = result?.data?.data.map((item, i) => ({
+    //     ...item,
+    //     id: i,
+    //     bookmark: false,
+    //   }));
+    //   dispatch(setAllNews(updatedNews));
+    // }
   };
 
   useEffect(() => {
