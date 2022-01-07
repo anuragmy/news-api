@@ -17,7 +17,7 @@ for linux (ubuntu/debian) : sudo apt install nodejs
 
 # prerequisits
  
-1. add newsapi api key in env file under variable REACT_APP_API_KEY
+1. add gnews api key in env file under variable REACT_APP_API_TOKEN (https://gnews.io/)
 2. fill other api fields with firebase project details
 
 for reference, you may go through this video
