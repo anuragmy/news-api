@@ -5,12 +5,11 @@ import "./App.css";
 import { Input, Spin, Switch, Avatar, Select, Card, Menu, Popover } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { fetchNews, fetchNewsWithQuery } from "../api";
-import { categories, themes } from "../constants";
+import { categories, themes, cats } from "../constants";
 import { Container, Grid } from "@material-ui/core";
 import Login from "./Login";
 import { logout, setTheme } from "../store/auth/actions";
 import { clearData, setAllNews } from "../store/news/actions";
-import Axios from "axios";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -22,9 +21,11 @@ const App = () => {
   const token = useSelector(({ auth }) => auth.token);
   const bookmarkedNews = useSelector(({ news }) => news.bookmarkNews);
   const allNews = useSelector(({ news }) => news.all);
+  console.log("🚀 ~ file: App.js ~ line 24 ~ App ~ allNews", allNews);
   const theme = useSelector(({ auth }) => auth.theme);
   const name = useSelector(({ auth }) => auth.name);
   const pic = useSelector(({ auth }) => auth.profile);
+  const fetchType = useSelector(({ news }) => news.type);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [bookmarkClicked, isBookmarkClicked] = useState(false);
@@ -40,10 +41,24 @@ const App = () => {
 
   const handleSubmit = async () => {
     if (query.length) {
-      const source = await fetchNewsWithQuery(query);
+      setLoading(true);
+      const source = await fetchNewsWithQuery(query, "search");
+      console.log(source);
+
       if (source) {
-        dispatch(setAllNews(source?.data?.articles));
+        const updatedNews = source?.data?.articles.map((item, i) => ({
+          ...item,
+          id: i,
+          bookmark: false,
+        }));
+        dispatch(
+          setAllNews({
+            news: updatedNews,
+            type: "search",
+          })
+        );
         setIsData(true);
+        setLoading(false);
       } else {
         setIsData(false);
       }
@@ -51,29 +66,23 @@ const App = () => {
     }
   };
 
-  const getTopNews = async () => {
+  const getNews = async () => {
     const result = await fetchNews();
-    if (result?.data?.articles) {
-      const updatedNews = result?.data?.articles.map((item, i) => ({
+
+    if (result?.data) {
+      const updatedNews = result?.data?.data.map((item, i) => ({
         ...item,
         id: i,
         bookmark: false,
       }));
-      dispatch(setAllNews(updatedNews));
+
+      dispatch(setAllNews({ news: updatedNews, type: "category" }));
     }
   };
 
-  const checkNews = async () => {
-    const result = await Axios.get(
-      "https://api.thenewsapi.com/v1/news/top?api_token=hq4dvaXLDsCit6VhPyfVS82hiLBF1cT8u18jmxhe"
-    );
-
-    console.log(result);
-  };
-
   useEffect(() => {
-    getTopNews();
-    checkNews();
+    //getTopNews();
+    getNews();
   }, []);
 
   useEffect(() => {
@@ -82,8 +91,18 @@ const App = () => {
       setIsData(false);
       const getNews = async () => {
         const res = await fetchNewsWithQuery(category);
-        if (res?.data?.articles) {
-          dispatch(setAllNews(res?.data?.articles));
+        if (res?.data?.data) {
+          const updatedNews = res?.data?.data.map((item, i) => ({
+            ...item,
+            id: i,
+            bookmark: false,
+          }));
+          dispatch(
+            setAllNews({
+              news: updatedNews,
+              type: "category",
+            })
+          );
           setIsData(true);
         } else setIsData(false);
         setLoading(false);
@@ -169,7 +188,7 @@ const App = () => {
                   placeholder="Select Category"
                   onChange={handleChangeCategory}
                 >
-                  {categories.map((source) => (
+                  {cats.map((source) => (
                     <Option
                       // onClick={() => loadNews(source.name)}
                       key={source}
@@ -238,6 +257,7 @@ const App = () => {
                 news={bookmarkClicked ? bookmarkedNews : allNews}
                 isData={isData}
                 theme={theme}
+                type={fetchType}
               />
             )}
           </Suspense>

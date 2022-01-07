@@ -9,9 +9,11 @@ import ReactHtmlParser from "react-html-parser";
 import { themes } from "../constants";
 import { Helmet } from "react-helmet";
 import { addBookmark } from "../store/news/actions";
+import moment from "moment";
+
 const { Meta } = Card;
 
-const NewsSection = ({ news, isData, theme }) => {
+const NewsSection = ({ news, isData, theme, type }) => {
   const dispatch = useDispatch();
   const [data, setData] = useState([]);
 
@@ -32,77 +34,147 @@ const NewsSection = ({ news, isData, theme }) => {
         <Container style={{ marginTop: 30 }}>
           {!data.length ? (
             <Empty />
-          ) : (
+          ) : type === "category" ? (
             <Grid container spacing={2}>
-              {data.map((article, key) =>
-                article.urlToImage === "" ||
-                article.urlToImage === null ? null : (
-                  <Grid item xs={12} sm={6} md={4} key={key}>
-                    <Card
-                      type="inner"
-                      hoverable={theme}
+              {data.map((article, key) => (
+                <Grid item xs={12} sm={6} md={4} key={key}>
+                  <Card
+                    type="inner"
+                    hoverable={theme}
+                    style={{
+                      marginBottom: 20,
+                      cursor: "pointer",
+                      minHeight: 520,
+                      background: theme ? "white" : themes.darkCard,
+                      color: theme ? "black" : "white",
+                    }}
+                    cover={
+                      <img
+                        alt={article.title}
+                        src={(type === "search", article.imageUrl)}
+                        style={{
+                          maxHeight: 250,
+                        }}
+                        onClick={() => window.open(article.url, "_blank")}
+                      />
+                    }
+                    title={
+                      article.author === "" || article.author === null
+                        ? null
+                        : "Author: " + ReactHtmlParser(article.author)
+                    }
+                    extra={
+                      <div onClick={() => handleChangeBookMark(article, key)}>
+                        <img
+                          src={article.bookmark ? Bookmark : Bookmarked}
+                          height={18}
+                        />
+                      </div>
+                    }
+                  >
+                    <div
                       style={{
-                        marginBottom: 20,
-                        cursor: "pointer",
-                        minHeight: 520,
                         background: theme ? "white" : themes.darkCard,
                         color: theme ? "black" : "white",
                       }}
-                      cover={
-                        article.urlToImage === "" ||
-                        article.urlToImage === null ? null : (
-                          <img
-                            alt={article.title}
-                            src={article.urlToImage}
-                            onClick={() => window.open(article.url, "_blank")}
-                          />
-                        )
-                      }
-                      title={
-                        article.source.name === "" ||
-                        article.source.name === null
-                          ? null
-                          : "Source: " + ReactHtmlParser(article.source.name)
-                      }
-                      extra={
-                        <div onClick={() => handleChangeBookMark(article, key)}>
-                          <img
-                            src={article.bookmark ? Bookmark : Bookmarked}
-                            height={18}
-                          />
-                        </div>
-                      }
                     >
-                      <div
+                      <h3
                         style={{
-                          background: theme ? "white" : themes.darkCard,
                           color: theme ? "black" : "white",
                         }}
+                        onClick={() => window.open(article.url, "_blank")}
                       >
-                        <h3
-                          style={{
-                            color: theme ? "black" : "white",
-                          }}
-                          onClick={() => window.open(article.url, "_blank")}
-                        >
-                          {ReactHtmlParser(article.title)}
-                        </h3>
-                        <Meta
-                          style={{
-                            color: theme ? "black" : "white",
-                          }}
-                          description={article.description}
-                          onClick={() => window.open(article.url, "_blank")}
-                        />
-                        <br />
-                        {article.author === "" || article.author === null
+                        {ReactHtmlParser(article.title)}
+                      </h3>
+                      <Meta
+                        style={{
+                          color: theme ? "black" : "white",
+                        }}
+                        description={article.content}
+                        onClick={() =>
+                          window.open(article.readMoreUrl, "_blank")
+                        }
+                      />
+                      <br />
+                      {article.date === "" || article.date === null
+                        ? null
+                        : "Date: " + article.date}
+                      {/* {article.published_at === "" ||
+                        article.published_at === null
                           ? null
-                          : "Author: " + article.author}
+                          : "Date: " +
+                            new Date(article.published_at).toUTCString()} */}
+                    </div>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <Grid container spacing={2}>
+              {data.map((article, key) => (
+                <Grid item xs={12} sm={6} md={4} key={key}>
+                  <Card
+                    type="inner"
+                    hoverable={theme}
+                    style={{
+                      marginBottom: 20,
+                      cursor: "pointer",
+                      minHeight: 520,
+                      background: theme ? "white" : themes.darkCard,
+                      color: theme ? "black" : "white",
+                    }}
+                    cover={
+                      <img
+                        alt={article.title}
+                        src={article.image}
+                        style={{
+                          maxHeight: 250,
+                        }}
+                        onClick={() => window.open(article.url, "_blank")}
+                      />
+                    }
+                    title={"Author: " + ReactHtmlParser(article?.source?.name)}
+                    extra={
+                      <div onClick={() => handleChangeBookMark(article, key)}>
+                        <img
+                          src={article.bookmark ? Bookmark : Bookmarked}
+                          height={18}
+                        />
                       </div>
-                    </Card>
-                  </Grid>
-                )
-              )}
+                    }
+                  >
+                    <div
+                      style={{
+                        background: theme ? "white" : themes.darkCard,
+                        color: theme ? "black" : "white",
+                      }}
+                    >
+                      <h3
+                        style={{
+                          color: theme ? "black" : "white",
+                        }}
+                        onClick={() =>
+                          window.open(article.source.url, "_blank")
+                        }
+                      >
+                        {ReactHtmlParser(article.title)}
+                      </h3>
+                      <Meta
+                        style={{
+                          color: theme ? "black" : "white",
+                        }}
+                        description={article.description}
+                        onClick={() =>
+                          window.open(article.readMoreUrl, "_blank")
+                        }
+                      />
+                      <br />
+                      {"Date: " +
+                        moment(article.publishedAt).format("MMMM Do YYYY")}
+                    </div>
+                  </Card>
+                </Grid>
+              ))}
             </Grid>
           )}
         </Container>

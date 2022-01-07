@@ -27,7 +27,8 @@ export const NewsReducer = (state = initialState, action) => {
     case actionTypes.ALLNEWS: {
       return {
         ...state,
-        all: action.payload,
+        all: action.payload.news,
+        type: action.payload.type,
       };
     }
 
