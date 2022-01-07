@@ -9,6 +9,22 @@ export const categories = [
   "technology",
 ];
 
+export const cats = [
+  "all",
+  "national",
+  "business",
+  "sports",
+  "world",
+  "politics",
+  "technology",
+  "startup",
+  "entertainment",
+  "miscellaneous",
+  "hatke",
+  "science",
+  "automobile",
+];
+
 export const googleNewsLink =
   "http://icons.iconarchive.com/icons/carlosjj/google-jfk/128/news-icon.png";
 
@@ -20,4 +36,3 @@ export const themes = {
   darkCard: "#051E3C",
   lightCard: "white",
 };
-
